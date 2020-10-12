@@ -1,0 +1,6 @@
+context_path: find_project.run.ProjectContext
+project_name: "find-project"
+project_version: "0.16.5"
+package_name: "find_project"
+hooks:
+  - find_project.hooks.project_hooks
