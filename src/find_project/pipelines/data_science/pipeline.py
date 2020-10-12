@@ -53,3 +53,5 @@ def create_pipeline(**kwargs):
             node(report_accuracy, ["example_predictions", "example_test_y"], None),
         ]
     )
+
+ds_pipeline = create_pipeline()

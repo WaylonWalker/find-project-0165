@@ -52,3 +52,5 @@ def create_pipeline(**kwargs):
             )
         ]
     )
+
+de_pipeline = create_pipeline()

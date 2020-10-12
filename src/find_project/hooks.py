@@ -28,6 +28,7 @@
 
 """Project hooks."""
 from typing import Any, Dict, Iterable, Optional
+from pathlib import Path
 
 from kedro.config import ConfigLoader
 from kedro.framework.hooks import hook_impl
@@ -35,9 +36,7 @@ from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
 
-from find_project.pipelines import data_engineering as de
-from find_project.pipelines import data_science as ds
-
+from find_kedro import find_kedro
 
 class ProjectHooks:
     @hook_impl
@@ -48,14 +47,9 @@ class ProjectHooks:
             A mapping from a pipeline name to a ``Pipeline`` object.
 
         """
-        data_engineering_pipeline = de.create_pipeline()
-        data_science_pipeline = ds.create_pipeline()
-
-        return {
-            "de": data_engineering_pipeline,
-            "ds": data_science_pipeline,
-            "__default__": data_engineering_pipeline + data_science_pipeline,
-        }
+        # path can be anything withing src/
+        # the closer you get to your pipeline the shorter the pipeline name will be
+        return find_kedro(directory=Path(__file__).parent / 'pipelines')
 
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:
