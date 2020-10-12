@@ -28,9 +28,7 @@
 
 from setuptools import find_packages, setup
 
-entry_point = (
-    "find-project = find_project.run:run_package"
-)
+entry_point = "find-project = find_project.run:run_package"
 
 
 # get the dependencies and installs

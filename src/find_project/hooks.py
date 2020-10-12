@@ -27,16 +27,16 @@
 # limitations under the License.
 
 """Project hooks."""
-from typing import Any, Dict, Iterable, Optional
 from pathlib import Path
+from typing import Any, Dict, Iterable, Optional
 
+from find_kedro import find_kedro
 from kedro.config import ConfigLoader
 from kedro.framework.hooks import hook_impl
 from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
 
-from find_kedro import find_kedro
 
 class ProjectHooks:
     @hook_impl
@@ -49,7 +49,7 @@ class ProjectHooks:
         """
         # path can be anything withing src/
         # the closer you get to your pipeline the shorter the pipeline name will be
-        return find_kedro(directory=Path(__file__).parent / 'pipelines')
+        return find_kedro(directory=Path(__file__).parent / "pipelines")
 
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:

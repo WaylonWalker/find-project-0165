@@ -34,6 +34,9 @@ PLEASE DELETE THIS FILE ONCE YOU START WORKING ON YOUR OWN PROJECT!
 from typing import Any, Dict
 
 import pandas as pd
+from kedro.pipeline import node
+
+nodes = []
 
 
 def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
@@ -76,3 +79,17 @@ def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, 
         test_x=test_data_x,
         test_y=test_data_y,
     )
+
+
+nodes.append(
+    node(
+        split_data,
+        ["example_iris_data", "params:example_test_data_ratio"],
+        dict(
+            train_x="example_train_x",
+            train_y="example_train_y",
+            test_x="example_test_x",
+            test_y="example_test_y",
+        ),
+    )
+)

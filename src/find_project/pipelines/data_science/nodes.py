@@ -38,6 +38,9 @@ from typing import Any, Dict
 
 import numpy as np
 import pandas as pd
+from kedro.pipeline import node
+
+nodes = []
 
 
 def train_model(
@@ -75,9 +78,17 @@ def train_model(
     return np.vstack(weights).transpose()
 
 
+nodes.append(
+    node(
+        train_model,
+        ["example_train_x", "example_train_y", "parameters"],
+        "example_model",
+    ),
+)
+
+
 def predict(model: np.ndarray, test_x: pd.DataFrame) -> np.ndarray:
-    """Node for making predictions given a pre-trained model and a test set.
-    """
+    """Node for making predictions given a pre-trained model and a test set."""
     X = test_x.to_numpy()
 
     # Add bias to the features
@@ -91,6 +102,15 @@ def predict(model: np.ndarray, test_x: pd.DataFrame) -> np.ndarray:
     return np.argmax(result, axis=1)
 
 
+nodes.append(
+    node(
+        predict,
+        dict(model="example_model", test_x="example_test_x"),
+        "example_predictions",
+    ),
+)
+
+
 def report_accuracy(predictions: np.ndarray, test_y: pd.DataFrame) -> None:
     """Node for reporting the accuracy of the predictions performed by the
     previous node. Notice that this function has no outputs, except logging.
@@ -102,6 +122,11 @@ def report_accuracy(predictions: np.ndarray, test_y: pd.DataFrame) -> None:
     # Log the accuracy of the model
     log = logging.getLogger(__name__)
     log.info("Model accuracy on test set: %0.2f%%", accuracy * 100)
+
+
+nodes.append(
+    node(report_accuracy, ["example_predictions", "example_test_y"], None),
+)
 
 
 def _sigmoid(z):
